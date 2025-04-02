@@ -40,6 +40,12 @@
 		"style": {
 			"navigationBarTitleText": "选择位置"
 		}
+	},
+	{
+		"path": "pages/ai/chat",
+		"style": {
+			"navigationBarTitleText": "AI 助手"
+		}
 	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

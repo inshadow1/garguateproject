@@ -88,6 +88,11 @@
       <text class="plus">+</text>
     </view>
 
+    <!-- AI助手按钮 -->
+    <view class="ai-btn" @click="navigateTo('/pages/ai/chat')">
+      <image src="/static/ai-icon.svg" class="ai-icon"></image>
+    </view>
+
     <!-- 高级搜索弹窗 -->
     <uni-popup ref="searchPopup" type="bottom">
       <view class="search-popup">
@@ -693,7 +698,7 @@ export default {
 .add-btn {
   position: fixed;
   right: 30rpx;
-  bottom: 100rpx;
+  bottom: 220rpx;
   width: 100rpx;
   height: 100rpx;
   background: #007aff;
@@ -878,5 +883,25 @@ export default {
   text-align: center;
   padding: 100rpx 0;
   color: #999;
+}
+
+.ai-btn {
+  position: fixed;
+  right: 30rpx;
+  bottom: 100rpx;
+  width: 100rpx;
+  height: 100rpx;
+  background: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.1);
+  border: 2rpx solid #536dfe;
+}
+
+.ai-icon {
+  width: 60rpx;
+  height: 60rpx;
 }
 </style>

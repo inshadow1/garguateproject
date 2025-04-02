@@ -24,3 +24,4 @@ const popup = {
   }
 };
 exports.popup = popup;
+//# sourceMappingURL=../../../../../.sourcemap/mp-weixin/uni_modules/uni-popup/components/uni-popup/popup.js.map

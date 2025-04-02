@@ -59,7 +59,7 @@ const _sfc_main = {
         this.profile = res.profile;
         this.username = this.profile.nickname || this.profile.username;
       } catch (e) {
-        console.error("获取用户信息失败:", e);
+        common_vendor.index.__f__("error", "at pages/user/user.vue:259", "获取用户信息失败:", e);
       }
     },
     showProfilePopup() {
@@ -237,7 +237,7 @@ const _sfc_main = {
           await this.uploadAvatar(filePath);
         }
       } catch (e) {
-        console.error("选择图片失败:", e);
+        common_vendor.index.__f__("error", "at pages/user/user.vue:452", "选择图片失败:", e);
       }
     },
     async uploadAvatar(filePath) {
@@ -318,7 +318,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       };
     })
   }, {
-    r: common_vendor.sr("favoritesPopup", "2fb17fc1-0"),
+    r: common_vendor.sr("favoritesPopup", "bf3a5836-0"),
     s: common_vendor.p({
       type: "bottom"
     }),
@@ -351,7 +351,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       };
     })
   } : {}, {
-    A: common_vendor.sr("remindersPopup", "2fb17fc1-1"),
+    A: common_vendor.sr("remindersPopup", "bf3a5836-1"),
     B: common_vendor.p({
       type: "bottom"
     }),
@@ -363,7 +363,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     H: $data.profile.email,
     I: common_vendor.o(($event) => $data.profile.email = $event.detail.value),
     J: common_vendor.o((...args) => $options.handleUpdateProfile && $options.handleUpdateProfile(...args)),
-    K: common_vendor.sr("profilePopup", "2fb17fc1-2"),
+    K: common_vendor.sr("profilePopup", "bf3a5836-2"),
     L: common_vendor.p({
       type: "bottom"
     }),
@@ -375,7 +375,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     R: $data.passwordForm.confirmPassword,
     S: common_vendor.o(($event) => $data.passwordForm.confirmPassword = $event.detail.value),
     T: common_vendor.o((...args) => $options.handleUpdatePassword && $options.handleUpdatePassword(...args)),
-    U: common_vendor.sr("passwordPopup", "2fb17fc1-3"),
+    U: common_vendor.sr("passwordPopup", "bf3a5836-3"),
     V: common_vendor.p({
       type: "bottom"
     })
@@ -383,3 +383,4 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render]]);
 wx.createPage(MiniProgramPage);
+//# sourceMappingURL=../../../.sourcemap/mp-weixin/pages/user/user.js.map

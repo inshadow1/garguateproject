@@ -66,3 +66,4 @@ const userApi = {
   }
 };
 exports.userApi = userApi;
+//# sourceMappingURL=../../.sourcemap/mp-weixin/api/user.js.map

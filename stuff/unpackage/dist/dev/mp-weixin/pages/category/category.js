@@ -175,7 +175,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       title: $data.isEdit ? "编辑分类" : "添加分类",
       ["before-close"]: true
     }),
-    k: common_vendor.sr("popup", "89b385be-0"),
+    k: common_vendor.sr("popup", "38e32d45-0"),
     l: common_vendor.p({
       type: "dialog"
     })
@@ -183,3 +183,4 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render]]);
 wx.createPage(MiniProgramPage);
+//# sourceMappingURL=../../../.sourcemap/mp-weixin/pages/category/category.js.map

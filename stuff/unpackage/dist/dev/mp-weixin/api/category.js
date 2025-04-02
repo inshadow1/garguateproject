@@ -32,3 +32,4 @@ const categoryApi = {
   }
 };
 exports.categoryApi = categoryApi;
+//# sourceMappingURL=../../.sourcemap/mp-weixin/api/category.js.map

@@ -62,7 +62,9 @@ const _sfc_main = {
           stockThreshold: item.stockThreshold || "",
           usageInterval: item.usageInterval || ""
         };
-        const categoryIndex = this.categories.findIndex((c) => c.id === item.category.id);
+        const categoryIndex = this.categories.findIndex(
+          (c) => c.id === item.category.id
+        );
         if (categoryIndex !== -1) {
           this.categoryIndex = categoryIndex;
         }
@@ -76,7 +78,7 @@ const _sfc_main = {
     handleCategoryChange(e) {
       this.categoryIndex = Number(e.detail.value);
       this.formData.categoryId = this.categories[this.categoryIndex].id;
-      console.log("分类变更:", {
+      common_vendor.index.__f__("log", "at pages/item/item.vue:193", "分类变更:", {
         categoryIndex: this.categoryIndex,
         categoryId: this.formData.categoryId,
         category: this.categories[this.categoryIndex]
@@ -89,16 +91,76 @@ const _sfc_main = {
           sizeType: ["compressed"],
           sourceType: ["album", "camera"]
         });
-        this.formData.imageUrl = res.tempFilePaths[0];
+        const tempFilePath = res.tempFilePaths[0];
+        try {
+          const base64 = await this.getBase64(tempFilePath);
+          this.formData.imageUrl = base64;
+          common_vendor.index.__f__("log", "at pages/item/item.vue:213", "图片已转换为base64格式");
+        } catch (error) {
+          common_vendor.index.__f__("error", "at pages/item/item.vue:215", "转换base64失败:", error);
+          common_vendor.index.showToast({
+            title: "图片转换失败，请重试",
+            icon: "none"
+          });
+          return;
+        }
+        common_vendor.index.__f__("log", "at pages/item/item.vue:223", "选择的图片路径:", tempFilePath);
       } catch (e) {
-        console.log(e);
+        common_vendor.index.__f__("log", "at pages/item/item.vue:225", "选择图片失败:", e);
       }
+    },
+    // 将图片转换为base64格式 - 使用canvas方式
+    getBase64(filePath) {
+      return new Promise((resolve, reject) => {
+        const ctx = common_vendor.index.createCanvasContext("imageCanvas", this);
+        common_vendor.index.getImageInfo({
+          src: filePath,
+          success: (info) => {
+            const maxSize = 3e3;
+            const scale = Math.min(
+              maxSize / info.width,
+              maxSize / info.height,
+              1
+            );
+            const canvasWidth = Math.floor(info.width * scale);
+            const canvasHeight = Math.floor(info.height * scale);
+            ctx.drawImage(filePath, 0, 0, canvasWidth, canvasHeight);
+            ctx.draw(false, () => {
+              common_vendor.index.canvasToTempFilePath(
+                {
+                  canvasId: "imageCanvas",
+                  x: 0,
+                  y: 0,
+                  width: canvasWidth,
+                  height: canvasHeight,
+                  destWidth: canvasWidth,
+                  destHeight: canvasHeight,
+                  fileType: "jpg",
+                  quality: 0.8,
+                  success: (res) => {
+                    resolve(res.tempFilePath);
+                  },
+                  fail: (error) => {
+                    common_vendor.index.__f__("error", "at pages/item/item.vue:263", "导出canvas失败:", error);
+                    reject(error);
+                  }
+                },
+                this
+              );
+            });
+          },
+          fail: (error) => {
+            common_vendor.index.__f__("error", "at pages/item/item.vue:272", "获取图片信息失败:", error);
+            reject(error);
+          }
+        });
+      });
     },
     deleteImage() {
       this.formData.imageUrl = "";
     },
     async handleSubmit() {
-      console.log("提交表单数据:", this.formData);
+      common_vendor.index.__f__("log", "at pages/item/item.vue:284", "提交表单数据:", this.formData);
       if (!this.validateForm())
         return;
       try {
@@ -127,7 +189,7 @@ const _sfc_main = {
           common_vendor.index.navigateBack();
         }, 1500);
       } catch (e) {
-        console.error("提交失败:", e);
+        common_vendor.index.__f__("error", "at pages/item/item.vue:318", "提交失败:", e);
         common_vendor.index.showToast({
           title: e.message || "操作失败",
           icon: "none"
@@ -135,7 +197,7 @@ const _sfc_main = {
       }
     },
     validateForm() {
-      console.log("验证表单数据:", {
+      common_vendor.index.__f__("log", "at pages/item/item.vue:327", "验证表单数据:", {
         name: this.formData.name,
         categoryId: this.formData.categoryId,
         quantity: this.formData.quantity
@@ -208,3 +270,4 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render]]);
 wx.createPage(MiniProgramPage);
+//# sourceMappingURL=../../../.sourcemap/mp-weixin/pages/item/item.js.map

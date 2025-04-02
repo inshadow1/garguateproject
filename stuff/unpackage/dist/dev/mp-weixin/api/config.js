@@ -38,3 +38,4 @@ const request = async (options) => {
 };
 exports.BASE_URL = BASE_URL;
 exports.request = request;
+//# sourceMappingURL=../../.sourcemap/mp-weixin/api/config.js.map

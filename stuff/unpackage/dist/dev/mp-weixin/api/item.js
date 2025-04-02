@@ -44,6 +44,14 @@ const itemApi = {
       method: "POST",
       data
     });
+  },
+  // 搜索家庭组物品
+  searchFamilyItems(familyId, params) {
+    return api_config.request({
+      url: `/item/family/${familyId}/search`,
+      data: params
+    });
   }
 };
 exports.itemApi = itemApi;
+//# sourceMappingURL=../../.sourcemap/mp-weixin/api/item.js.map
