@@ -53,3 +53,4 @@ const reminderApi = {
   }
 };
 exports.reminderApi = reminderApi;
+//# sourceMappingURL=../../.sourcemap/mp-weixin/api/reminder.js.map

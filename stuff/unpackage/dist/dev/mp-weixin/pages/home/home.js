@@ -58,7 +58,7 @@ const _sfc_main = {
         this.userRole = res.profile.role;
         this.familyRoles = res.profile.familyRoles || [];
       } catch (e) {
-        console.error("获取用户角色失败:", e);
+        common_vendor.index.__f__("error", "at pages/home/home.vue:301", "获取用户角色失败:", e);
       }
     },
     async loadCategories() {
@@ -67,7 +67,7 @@ const _sfc_main = {
         const res = await api_category.categoryApi.getList(userId);
         this.categories = res.categories || [];
       } catch (e) {
-        console.error(e);
+        common_vendor.index.__f__("error", "at pages/home/home.vue:310", e);
       }
     },
     async loadItems(refresh = true) {
@@ -79,17 +79,24 @@ const _sfc_main = {
         return;
       try {
         const userId = common_vendor.index.getStorageSync("userId");
-        const res = await api_item.itemApi.search(userId, this.searchParams);
+        let res;
+        if (this.familyRoles && this.familyRoles.length > 0) {
+          const familyId = this.familyRoles[0].familyId;
+          res = await api_item.itemApi.searchFamilyItems(familyId, this.searchParams);
+        } else {
+          res = await api_item.itemApi.search(userId, this.searchParams);
+        }
         const newItems = res.items || [];
         for (let item of newItems) {
           const favoriteRes = await api_favorite.favoriteApi.check(item.id, userId);
           item.isFavorite = favoriteRes.isFavorite;
+          item.ownerName = item.user ? item.user.username : "未知";
         }
         this.items = refresh ? newItems : [...this.items, ...newItems];
         this.hasMore = newItems.length === this.searchParams.size;
         this.searchParams.page++;
       } catch (e) {
-        console.error(e);
+        common_vendor.index.__f__("error", "at pages/home/home.vue:349", e);
       }
     },
     switchCategory(categoryId) {
@@ -212,7 +219,7 @@ const _sfc_main = {
         const res = await api_reminder.reminderApi.getAlerts(userId);
         this.alerts = res.data;
       } catch (e) {
-        console.error("获取提醒失败:", e);
+        common_vendor.index.__f__("error", "at pages/home/home.vue:491", "获取提醒失败:", e);
       }
     },
     showAlertsPopup() {
@@ -226,7 +233,10 @@ const _sfc_main = {
       if (!timeStr)
         return "";
       const date = new Date(timeStr);
-      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+        2,
+        "0"
+      )}-${String(date.getDate()).padStart(2, "0")}`;
     },
     navigateToItemDetail(itemId) {
       this.navigateTo(`/pages/item/detail?id=${itemId}`);
@@ -269,49 +279,53 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   }, $data.items.length === 0 ? {} : {
     l: common_vendor.f($data.items, (item, index, i0) => {
       var _a2;
-      return {
-        a: item.imageUrl || "/static/default-item.png",
-        b: common_vendor.t(item.name),
-        c: common_vendor.t(((_a2 = item.category) == null ? void 0 : _a2.name) || "未分类"),
-        d: common_vendor.t(item.quantity),
-        e: common_vendor.t(item.location || "暂无"),
-        f: common_vendor.o(($event) => $options.navigateToDetail(item.id), item.id),
-        g: common_vendor.t(item.isFavorite ? "★" : "☆"),
-        h: item.isFavorite ? 1 : "",
-        i: common_vendor.o(($event) => $options.toggleFavorite(item), item.id),
-        j: item.id
-      };
-    })
+      return common_vendor.e({
+        a: item.imageUrl || "/static/default.png",
+        b: common_vendor.t(item.name)
+      }, $data.familyRoles && $data.familyRoles.length > 0 ? {
+        c: common_vendor.t(item.ownerName)
+      } : {}, {
+        d: common_vendor.t(((_a2 = item.category) == null ? void 0 : _a2.name) || "未分类"),
+        e: common_vendor.t(item.quantity),
+        f: common_vendor.t(item.location || "暂无"),
+        g: common_vendor.o(($event) => $options.navigateToDetail(item.id), item.id),
+        h: common_vendor.t(item.isFavorite ? "★" : "☆"),
+        i: item.isFavorite ? 1 : "",
+        j: common_vendor.o(($event) => $options.toggleFavorite(item), item.id),
+        k: item.id
+      });
+    }),
+    m: $data.familyRoles && $data.familyRoles.length > 0
   }, {
-    m: $options.canManageItems
+    n: $options.canManageItems
   }, $options.canManageItems ? {
-    n: common_vendor.o(($event) => $options.navigateTo("/pages/item/item"))
+    o: common_vendor.o(($event) => $options.navigateTo("/pages/item/item"))
   } : {}, {
-    o: common_vendor.o((...args) => $options.hideSearchPopup && $options.hideSearchPopup(...args)),
-    p: $data.searchParams.keyword,
-    q: common_vendor.o(($event) => $data.searchParams.keyword = $event.detail.value),
-    r: common_vendor.t(((_a = $data.categories[$data.categoryIndex]) == null ? void 0 : _a.name) || "全部分类"),
-    s: common_vendor.o((...args) => $options.handleCategoryChange && $options.handleCategoryChange(...args)),
-    t: $data.categoryIndex,
-    v: $data.categories,
-    w: $data.searchParams.location,
-    x: common_vendor.o(($event) => $data.searchParams.location = $event.detail.value),
-    y: common_vendor.t($data.searchParams.startDate || "开始日期"),
-    z: $data.searchParams.startDate,
-    A: common_vendor.o((...args) => $options.handleStartDateChange && $options.handleStartDateChange(...args)),
-    B: common_vendor.t($data.searchParams.endDate || "结束日期"),
-    C: $data.searchParams.endDate,
-    D: common_vendor.o((...args) => $options.handleEndDateChange && $options.handleEndDateChange(...args)),
-    E: common_vendor.o((...args) => $options.resetSearch && $options.resetSearch(...args)),
-    F: common_vendor.o((...args) => $options.confirmSearch && $options.confirmSearch(...args)),
-    G: common_vendor.sr("searchPopup", "2695cc41-0"),
-    H: common_vendor.p({
+    p: common_vendor.o((...args) => $options.hideSearchPopup && $options.hideSearchPopup(...args)),
+    q: $data.searchParams.keyword,
+    r: common_vendor.o(($event) => $data.searchParams.keyword = $event.detail.value),
+    s: common_vendor.t(((_a = $data.categories[$data.categoryIndex]) == null ? void 0 : _a.name) || "全部分类"),
+    t: common_vendor.o((...args) => $options.handleCategoryChange && $options.handleCategoryChange(...args)),
+    v: $data.categoryIndex,
+    w: $data.categories,
+    x: $data.searchParams.location,
+    y: common_vendor.o(($event) => $data.searchParams.location = $event.detail.value),
+    z: common_vendor.t($data.searchParams.startDate || "开始日期"),
+    A: $data.searchParams.startDate,
+    B: common_vendor.o((...args) => $options.handleStartDateChange && $options.handleStartDateChange(...args)),
+    C: common_vendor.t($data.searchParams.endDate || "结束日期"),
+    D: $data.searchParams.endDate,
+    E: common_vendor.o((...args) => $options.handleEndDateChange && $options.handleEndDateChange(...args)),
+    F: common_vendor.o((...args) => $options.resetSearch && $options.resetSearch(...args)),
+    G: common_vendor.o((...args) => $options.confirmSearch && $options.confirmSearch(...args)),
+    H: common_vendor.sr("searchPopup", "d171bf36-0"),
+    I: common_vendor.p({
       type: "bottom"
     }),
-    I: common_vendor.o((...args) => $options.hideAlertsPopup && $options.hideAlertsPopup(...args)),
-    J: $data.alerts.lowStockAlerts && $data.alerts.lowStockAlerts.length > 0
+    J: common_vendor.o((...args) => $options.hideAlertsPopup && $options.hideAlertsPopup(...args)),
+    K: $data.alerts.lowStockAlerts && $data.alerts.lowStockAlerts.length > 0
   }, $data.alerts.lowStockAlerts && $data.alerts.lowStockAlerts.length > 0 ? {
-    K: common_vendor.f($data.alerts.lowStockAlerts, (item, index, i0) => {
+    L: common_vendor.f($data.alerts.lowStockAlerts, (item, index, i0) => {
       return {
         a: common_vendor.t(item.itemName),
         b: common_vendor.t(item.location),
@@ -322,9 +336,9 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       };
     })
   } : {}, {
-    L: $data.alerts.usageAlerts && $data.alerts.usageAlerts.length > 0
+    M: $data.alerts.usageAlerts && $data.alerts.usageAlerts.length > 0
   }, $data.alerts.usageAlerts && $data.alerts.usageAlerts.length > 0 ? {
-    M: common_vendor.f($data.alerts.usageAlerts, (item, index, i0) => {
+    N: common_vendor.f($data.alerts.usageAlerts, (item, index, i0) => {
       return {
         a: common_vendor.t(item.itemName),
         b: common_vendor.t(item.location),
@@ -335,13 +349,14 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       };
     })
   } : {}, {
-    N: !$options.hasAlerts
+    O: !$options.hasAlerts
   }, !$options.hasAlerts ? {} : {}, {
-    O: common_vendor.sr("alertsPopup", "2695cc41-1"),
-    P: common_vendor.p({
+    P: common_vendor.sr("alertsPopup", "d171bf36-1"),
+    Q: common_vendor.p({
       type: "bottom"
     })
   });
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render]]);
 wx.createPage(MiniProgramPage);
+//# sourceMappingURL=../../../.sourcemap/mp-weixin/pages/home/home.js.map

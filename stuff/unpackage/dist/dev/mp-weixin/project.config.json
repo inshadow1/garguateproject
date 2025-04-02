@@ -1,26 +1,25 @@
 {
-  "description": "项目配置文件。",
+  "appid": "wx2a30945022dceda6",
+  "compileType": "miniprogram",
+  "libVersion": "3.7.9",
   "packOptions": {
     "ignore": [],
     "include": []
   },
   "setting": {
-    "urlCheck": false,
+    "coverView": true,
     "es6": true,
-    "postcss": false,
-    "minified": false,
-    "newFeature": true,
-    "bigPackageSizeSupport": true,
+    "postcss": true,
+    "minified": true,
+    "enhance": true,
+    "showShadowRootInWxmlPanel": true,
+    "packNpmRelationList": [],
     "babelSetting": {
       "ignore": [],
       "disablePlugins": [],
       "outputPath": ""
     }
   },
-  "compileType": "miniprogram",
-  "libVersion": "3.7.8",
-  "appid": "touristappid",
-  "projectname": "stuff",
   "condition": {},
   "editorSetting": {
     "tabIndent": "insertSpaces",

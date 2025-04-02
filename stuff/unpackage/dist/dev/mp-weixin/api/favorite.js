@@ -31,3 +31,4 @@ const favoriteApi = {
   }
 };
 exports.favoriteApi = favoriteApi;
+//# sourceMappingURL=../../.sourcemap/mp-weixin/api/favorite.js.map
