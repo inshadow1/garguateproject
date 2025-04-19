@@ -64,6 +64,13 @@ export const adminApi = {
     })
   },
 
+  // 生成家庭组邀请码
+  generateFamilyInviteCode(familyId, adminId) {
+    return api.post(`/family/${familyId}/generateInviteCode`, {
+      adminId
+    })
+  },
+
   // 获取仪表盘统计数据
   getDashboardStats() {
     return api.get('/statistics/dashboard', {

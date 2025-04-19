@@ -131,11 +131,11 @@ CREATE TABLE `invitations`  (
   `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `create_time` datetime NOT NULL,
   `expire_time` datetime NOT NULL,
-  `invitee_email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `invitee_email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
   `used` bit(1) NOT NULL,
   `family_id` bigint NOT NULL,
   `inviter_id` bigint NOT NULL,
-  `invitee_id` bigint NOT NULL,
+  `invitee_id` bigint NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `FKkuuqtwqhb5qypuca03j1m3b0i`(`family_id` ASC) USING BTREE,
   INDEX `FKc93ihvftpd11j547qgc9fobmc`(`inviter_id` ASC) USING BTREE,
@@ -245,7 +245,7 @@ CREATE TABLE `users`  (
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES (1, '123', '123', '/api/uploads/avatars/ea43989b-0094-4711-9adc-955e10c7685f.png', 'fwe@qq.com', 'fweedqwdqw', 'ADMIN', '2025-02-16 22:42:04');
+INSERT INTO `users` VALUES (1, '11111111111111111', 'firstuser', NULL, NULL, NULL, 'MEMBER', '2025-04-19 22:42:04');
 INSERT INTO `users` VALUES (2, 'wqdqwdqw', 'asd', NULL, NULL, NULL, 'MEMBER', '2025-02-16 22:42:04');
 INSERT INTO `users` VALUES (3, 'fewfew', 'fwqwd', NULL, NULL, NULL, 'MEMBER', '2025-02-16 22:42:04');
 INSERT INTO `users` VALUES (4, 'dwqqdw', 'dwqw', NULL, NULL, NULL, 'MEMBER', '2025-02-16 22:42:04');

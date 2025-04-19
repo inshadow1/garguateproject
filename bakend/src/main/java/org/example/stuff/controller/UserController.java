@@ -16,38 +16,75 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/user")
-@CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000", "http://127.0.0.1:5173"}, allowCredentials = "true")
+@CrossOrigin(origins = { "http://localhost:8080", "http://localhost:3000",
+        "http://127.0.0.1:5173" }, allowCredentials = "true")
 public class UserController {
-    
+
     @Autowired
     private UserService userService;
-    
+
     @PostMapping("/register")
     public Map<String, Object> register(@RequestBody Map<String, String> params) {
-        User user = userService.register(params.get("username"), params.get("password"));
-        Map<String, Object> result = new HashMap<>();
-        result.put("success", true);
-        result.put("message", "注册成功");
-        result.put("userId", user.getId());
-        return result;
+        try {
+            String username = params.get("username");
+            String password = params.get("password");
+
+            // 验证参数
+            if (username == null || password == null || username.trim().isEmpty() || password.trim().isEmpty()) {
+                Map<String, Object> errorResult = new HashMap<>();
+                errorResult.put("success", false);
+                errorResult.put("message", "用户名或密码不能为空");
+                return errorResult;
+            }
+
+            User user = userService.register(username, password);
+            Map<String, Object> result = new HashMap<>();
+            result.put("success", true);
+            result.put("message", "注册成功");
+            result.put("userId", user.getId());
+            return result;
+        } catch (Exception e) {
+            Map<String, Object> errorResult = new HashMap<>();
+            errorResult.put("success", false);
+            errorResult.put("message", e.getMessage());
+            return errorResult;
+        }
     }
-    
+
     @PostMapping("/login")
     public Map<String, Object> login(@RequestBody Map<String, String> params) {
-        User user = userService.login(params.get("username"), params.get("password"));
-        Map<String, Object> result = new HashMap<>();
-        result.put("success", true);
-        result.put("message", "登录成功");
-        result.put("userId", user.getId());
-        return result;
+        try {
+            String username = params.get("username");
+            String password = params.get("password");
+
+            // 验证参数
+            if (username == null || password == null || username.trim().isEmpty() || password.trim().isEmpty()) {
+                Map<String, Object> errorResult = new HashMap<>();
+                errorResult.put("success", false);
+                errorResult.put("message", "用户名或密码不能为空");
+                return errorResult;
+            }
+
+            User user = userService.login(username, password);
+            Map<String, Object> result = new HashMap<>();
+            result.put("success", true);
+            result.put("message", "登录成功");
+            result.put("userId", user.getId());
+            return result;
+        } catch (Exception e) {
+            Map<String, Object> errorResult = new HashMap<>();
+            errorResult.put("success", false);
+            errorResult.put("message", e.getMessage());
+            return errorResult;
+        }
     }
-    
+
     // 获取用户信息
     @GetMapping("/{userId}/profile")
     public Map<String, Object> getUserProfile(@PathVariable Long userId) {
         return userService.getUserProfile(userId);
     }
-    
+
     // 更新用户基本信息
     @PutMapping("/{userId}/profile")
     public Map<String, Object> updateUserProfile(
@@ -55,7 +92,7 @@ public class UserController {
             @RequestBody Map<String, Object> params) {
         return userService.updateUserProfile(userId, params);
     }
-    
+
     // 修改密码
     @PutMapping("/{userId}/password")
     public Map<String, Object> updatePassword(
@@ -63,7 +100,7 @@ public class UserController {
             @RequestBody Map<String, String> params) {
         return userService.updatePassword(userId, params);
     }
-    
+
     @PostMapping(value = "/{userId}/avatar", consumes = "multipart/form-data")
     public Map<String, Object> uploadAvatar(
             @PathVariable Long userId,
@@ -71,38 +108,38 @@ public class UserController {
         if (file.isEmpty()) {
             throw new RuntimeException("请选择要上传的图片");
         }
-        
+
         // 检查文件类型
         String contentType = file.getContentType();
         if (contentType == null || !contentType.startsWith("image/")) {
             throw new RuntimeException("只能上传图片文件");
         }
-        
+
         // 检查文件大小（最大 5MB）
         if (file.getSize() > 5 * 1024 * 1024) {
             throw new RuntimeException("图片大小不能超过 5MB");
         }
-        
+
         try {
             // 生成文件名
             String originalFilename = file.getOriginalFilename();
-            String extension = originalFilename != null ? 
-                originalFilename.substring(originalFilename.lastIndexOf(".")) : ".jpg";
+            String extension = originalFilename != null ? originalFilename.substring(originalFilename.lastIndexOf("."))
+                    : ".jpg";
             String filename = UUID.randomUUID().toString() + extension;
-            
+
             // 保存文件
             String uploadDir = "uploads/avatars/";
             File dir = new File(uploadDir);
             if (!dir.exists() && !dir.mkdirs()) {
                 throw new RuntimeException("创建上传目录失败");
             }
-            
+
             File dest = new File(dir.getAbsolutePath() + File.separator + filename);
             file.transferTo(dest);
-            
+
             // 生成访问URL
             String avatarUrl = "/api/uploads/avatars/" + filename;
-            
+
             // 删除旧头像文件
             User user = userService.getUserById(userId);
             String oldAvatar = user.getAvatar();
@@ -113,9 +150,9 @@ public class UserController {
                     oldFile.delete();
                 }
             }
-            
+
             return userService.updateAvatar(userId, avatarUrl);
-            
+
         } catch (IOException e) {
             throw new RuntimeException("文件上传失败", e);
         }
@@ -129,10 +166,10 @@ public class UserController {
         if (params.get("adminId") == null || params.get("role") == null) {
             throw new RuntimeException("缺少必填参数");
         }
-        
+
         Long adminId = Long.parseLong(params.get("adminId").toString());
         UserRole newRole = UserRole.valueOf(params.get("role").toString());
-        
+
         return userService.updateUserRole(adminId, userId, newRole);
     }
-} 
+}

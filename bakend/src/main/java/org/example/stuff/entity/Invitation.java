@@ -6,42 +6,45 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "invitations")
 public class Invitation {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @ManyToOne
     @JoinColumn(name = "family_id", nullable = false)
     private Family family;
-    
+
     @ManyToOne
     @JoinColumn(name = "inviter_id", nullable = false)
     private User inviter;
-    
+
     @ManyToOne
-    @JoinColumn(name = "invitee_id", nullable = false)
+    @JoinColumn(name = "invitee_id", nullable = true)
     private User invitee;
-    
+
+    @Column(name = "invitee_email", nullable = true)
+    private String inviteeEmail;
+
     @Column(nullable = false)
     private String code;
-    
+
     @Column(nullable = false)
     private Boolean used = false;
-    
+
     @Column(nullable = false)
     private LocalDateTime createTime;
-    
+
     @Column(nullable = false)
     private LocalDateTime expireTime;
-    
+
     @PrePersist
     protected void onCreate() {
         createTime = LocalDateTime.now();
         // 默认24小时有效期
         expireTime = createTime.plusHours(24);
     }
-    
+
     // Getters and Setters
     public Long getId() {
         return id;
@@ -102,4 +105,12 @@ public class Invitation {
     public void setExpireTime(LocalDateTime expireTime) {
         this.expireTime = expireTime;
     }
-} 
+
+    public String getInviteeEmail() {
+        return inviteeEmail;
+    }
+
+    public void setInviteeEmail(String inviteeEmail) {
+        this.inviteeEmail = inviteeEmail;
+    }
+}

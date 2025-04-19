@@ -9,36 +9,54 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/family")
-@CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"}, allowCredentials = "true")
+@CrossOrigin(origins = { "http://localhost:8080", "http://localhost:3000",
+        "http://127.0.0.1:5173" }, allowCredentials = "true")
 public class FamilyController {
-    
+
     @Autowired
     private FamilyService familyService;
-    
+
     // 创建家庭组
     @PostMapping
     public Map<String, Object> createFamily(@RequestBody Map<String, Object> params) {
         return familyService.createFamily(params);
     }
-    
+
     // 获取用户的家庭组列表
     @GetMapping("/user/{userId}")
     public Map<String, Object> getUserFamilies(@PathVariable Long userId) {
         return familyService.getUserFamilies(userId);
     }
-    
+
+    // 生成邀请码
+    @PostMapping("/{familyId}/generateInviteCode")
+    public Map<String, Object> generateInviteCode(
+            @PathVariable Long familyId,
+            @RequestBody Map<String, Object> params) {
+        return familyService.generateInviteCode(
+                familyId,
+                Long.parseLong(params.get("adminId").toString()));
+    }
+
+    // 通过邀请码加入家庭组
+    @PostMapping("/joinByCode")
+    public Map<String, Object> joinByInviteCode(@RequestBody Map<String, Object> params) {
+        return familyService.joinByInviteCode(
+                (String) params.get("inviteCode"),
+                Long.parseLong(params.get("userId").toString()));
+    }
+
     // 邀请成员
     @PostMapping("/{familyId}/invite")
     public Map<String, Object> inviteMember(
             @PathVariable Long familyId,
             @RequestBody Map<String, Object> params) {
         return familyService.inviteMember(
-            familyId,
-            Long.parseLong(params.get("inviterId").toString()),
-            Long.parseLong(params.get("inviteeId").toString())
-        );
+                familyId,
+                Long.parseLong(params.get("inviterId").toString()),
+                Long.parseLong(params.get("inviteeId").toString()));
     }
-    
+
     // 接受邀请
     @PostMapping("/invitation/{code}/accept")
     public Map<String, Object> acceptInvitation(
@@ -46,19 +64,19 @@ public class FamilyController {
             @RequestParam Long userId) {
         return familyService.acceptInvitation(code, userId);
     }
-    
+
     // 获取家庭组成员列表
     @GetMapping("/{familyId}/members")
     public Map<String, Object> getFamilyMembers(@PathVariable Long familyId) {
         return familyService.getFamilyMembers(familyId);
     }
-    
+
     // 获取用户收到的邀请
     @GetMapping("/invitations/{userId}")
     public Map<String, Object> getUserInvitations(@PathVariable Long userId) {
         return familyService.getUserInvitations(userId);
     }
-    
+
     // 更新家庭成员角色
     @PutMapping("/families/{familyId}/members/{memberId}/role")
     public Map<String, Object> updateFamilyMemberRole(
@@ -70,4 +88,4 @@ public class FamilyController {
         }
         return familyService.updateFamilyMemberRole(familyId, memberId, params.get("role"));
     }
-} 
+}

@@ -29,11 +29,17 @@ export const request = async (options) => {
             }
         })
         
-        if (res.statusCode === 200 && res.data && res.data.success) {
-            return res.data
-        } else {
-            throw new Error(res.data?.message || '请求失败')
+        // 检查HTTP状态码和服务器响应
+        if (res.statusCode !== 200) {
+            throw new Error(`HTTP错误: ${res.statusCode}`)
         }
+        
+        // 检查业务成功标志
+        if (res.data && res.data.success === false) {
+            throw new Error(res.data.message || '操作失败')
+        }
+        
+        return res.data
     } catch (e) {
         uni.showToast({
             title: e.message || '网络请求失败',

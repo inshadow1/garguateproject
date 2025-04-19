@@ -71,5 +71,17 @@ export const userApi = {
                 }
             })
         })
+    },
+    
+    // 通过邀请码加入家庭组
+    joinFamily(userId, inviteCode) {
+        return request({
+            url: '/family/joinByCode',
+            method: 'POST',
+            data: {
+                userId,
+                inviteCode
+            }
+        })
     }
 } 
